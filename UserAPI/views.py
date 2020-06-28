@@ -26,7 +26,8 @@ class LoginRegister(ObtainJSONWebToken, CreateModelMixin, GenericViewSet):
         def validate(attrs):
             if models.User.objects.filter(username=attrs.get('username')).first():
                 return -1, "用户已存在"
-            re_pwd = attrs.pop('re_pwd')
+            re_pwd = attrs.get('re_pwd')
+            attrs.pop('re_pwd')
             if re_pwd is None:
                 return -1, '请重复输入密码'
             if re_pwd != attrs.get('password'):

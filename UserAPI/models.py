@@ -16,15 +16,16 @@ class User(AbstractUser):
             'choices': _("You must choose male or female"),
         },
     )
-    img = models.ImageField(upload_to='img', default='img/default.png')
+    # img = models.ImageField(upload_to='img', default='img/default.png')
+    img = models.FileField(upload_to='img', default='img/default.png')
 
     def save(self, *args, **kwargs):
         self.password = make_password(self.password)
         super(User, self).save(*args, **kwargs)
     #
-    # def set_password(self, raw_password):
-    #     super(User, self).set_password(raw_password)
-    #
+    def set_password(self, raw_password):
+        super(User, self).set_password(raw_password)
+
     # def check_password(self, raw_password):
     #     super(User, self).check_password(raw_password)
 

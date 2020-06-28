@@ -53,7 +53,7 @@ class UserModelSerializers2(serializers.ModelSerializer):
 class CommentModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = pyq_api_model.Comment
-        fields = ('username', 'user_img', 'comment', 'create_time', 'pyq_obj')
+        fields = ('username', 'user_img', 'comment', 'create_time', 'id')
 
 
 class WinkModelSerializer(serializers.ModelSerializer):
@@ -83,7 +83,8 @@ class PyqModelSerializers(serializers.ModelSerializer):
 
     def get_comments(self, obj):
         # 正向查询
-        comment_ser = CommentModelSerializer(obj.comment_set.only('comment'), many=True).data
+        # comment_ser = CommentModelSerializer(obj.comment_set.only('comment'), many=True).data
+        comment_ser = CommentModelSerializer(obj.comment_set.filter(is_delete=False), many=True).data
         return comment_ser
 
     def get_winks(self, obj):

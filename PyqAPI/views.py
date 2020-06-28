@@ -68,7 +68,7 @@ class PyqOperator(RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateMo
 
     def add_pyq(self, req, *args, **kwargs):
         # 发表一条动态
-        req.data['user_id'] = req.user.id
+        req.data['user'] = req.user.id
         models.Pyq(
             user= req.user,
             content=req.data['content']
@@ -76,7 +76,7 @@ class PyqOperator(RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateMo
         # response = self.create(req, *args, **kwargs)
         # Column 'user_id' cannot be null
         return Response({
-            'msg': '操你妈'
+            'msg': '发表成功'
         })
 
     def add_comment(self, req, *args, **kwargs):
@@ -91,9 +91,9 @@ class PyqOperator(RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateMo
             comment=req.data['comment']
         ).save()
         # Column 'user_id' cannot be null
-        # response = self.create(req, *args, **kwargs)
+        # return self.create(req, *args, **kwargs)
         return Response({
-            'msg': '操你妈'
+            'msg': '评论成功'
         })
 
     def update_pyq(self, req, *args, **kwargs):
