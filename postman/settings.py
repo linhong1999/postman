@@ -82,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'postman',
         'USER': 'root',
-        'PASSWORD': '111111',
+        'PASSWORD': '1',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     },
