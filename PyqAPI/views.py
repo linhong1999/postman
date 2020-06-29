@@ -13,14 +13,13 @@ class PyqBrowser(RetrieveModelMixin, ListModelMixin, GenericViewSet):
 
     serializer_class = serializers.PyqModelSerializers
     def sort_by_date(self, query):
-        date_set = set()
         sored_query_dict = dict()
         for obj in query:
             date_split = obj.get('create_time')[:10].split('-')
             date_tuple = '%s-%s-%s' % (date_split[0], date_split[1], date_split[2])
-            date_set.add(date_tuple)
             if date_tuple not in sored_query_dict:
-                sored_query_dict = {}.fromkeys(date_set, [])
+                # sored_query_dict = {}.fromkeys(date_tuple, [])
+                sored_query_dict[date_tuple] = []
             sored_query_dict[date_tuple].append(obj)
 
         return sored_query_dict

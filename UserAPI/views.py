@@ -13,12 +13,12 @@ class LoginRegister(ObtainJSONWebToken, CreateModelMixin, GenericViewSet):
     serializer_class = serializers.UserModelSerializers
 
     def login(self, req, *args, **kwargs):
+        print(req.data)
         response = super().post(req, *args, **kwargs)
         if response:
             response.data['user_info'] = serializers.UserModelSerializers(
                 models.User.objects.get(username=req.data.get('username'))
             ).data
-
         return response
 
     def register(self, req, *args, **kwargs):
