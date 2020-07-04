@@ -21,8 +21,8 @@ from django.views.generic.base import TemplateView
 urlpatterns = [
 
     path('admin/', admin.site.urls),
-    path('userapi/', include('UserAPI.urls')),
-    path('pyqapi/', include('PyqAPI.urls')),
+    path('userapi/', include('userapi.urls')),
+    path('pyqapi/', include('pyqapi.urls')),
     re_path(r'media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 
     path('', TemplateView.as_view(template_name='index.html')),

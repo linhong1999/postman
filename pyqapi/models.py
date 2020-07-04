@@ -1,5 +1,5 @@
 from django.db import models
-from UserAPI import models as user_api_model
+from userapi import models as user_api_model
 
 
 class BaseModel(models.Model):
@@ -36,9 +36,11 @@ class Comment(BaseModel):
     pyq_obj = models.ForeignKey(Pyq, on_delete=models.CASCADE)
     comment = models.CharField(max_length=255)
 
+    @property
     def username(self):
         return self.user.username
 
+    @property
     def user_img(self):
         return str(self.user.img)
 

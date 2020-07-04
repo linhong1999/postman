@@ -37,9 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'UserAPI',
-    'CommonAPI',
-    'PyqAPI',
+    'userapi',
+    'commonapi',
+    'pyqapi',
 ]
 
 MIDDLEWARE = [
@@ -57,8 +57,8 @@ ROOT_URLCONF = 'postman.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # 'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        'DIRS': ['postman/dist'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        ,
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -91,24 +91,20 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
-AUTH_USER_MODEL = 'UserAPI.User'
 
 AUTH_PASSWORD_VALIDATORS = [
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    # },
-]
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend'
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
 
@@ -117,7 +113,7 @@ AUTHENTICATION_BACKENDS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Asia/Shanghai'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -130,33 +126,27 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'postman/dist/static/'),  # 添加内容
-]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+AUTH_USER_MODEL = 'userapi.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.TemplateHTMLRenderer',
+        # 'rest_framework.renderers.TemplateHTMLRenderer',
     ],
 
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
         'rest_framework.parsers.FormParser',       # url
         'rest_framework.parsers.MultiPartParser',  # 这个才是form
-        'rest_framework.parsers.FileUploadParser'
-
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [  # 认证类配置
-        'CommonAPI.authentications.MyAuthentication',
+        'commonapi.authentications.MyAuthentication',
     ],
-    'DEFAULT_PERMISSION_CLASSES': [  # 权限类配置
-        # 'rest_framework.permissions.AllowAny',
-        # 'Permissions.authentications.MyPermission',
-    ],
+    'EXCEPTION_HANDLER': 'commonapi.exceptions.exception_handler',
+
 }
 
 JWT_AUTH = {
