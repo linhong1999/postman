@@ -4,9 +4,9 @@ from rest_framework.views import exception_handler as handler
 
 from .commonresponse import CommonResponse
 
-def exception_handler(exc, context):
 
-    response = handler(exc,context)
+def exception_handler(exc, context):
+    response = handler(exc, context)
 
     if response is None:
         print('%s - %s - %s ' % (context['view'], context['request'].method, exc))
