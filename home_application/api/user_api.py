@@ -6,9 +6,9 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework_jwt.views import ObtainJSONWebToken
 from rest_framework import status as http_status
 
-from commonapi import serializers
-from commonapi.commonresponse import CommonResponse
-from . import models
+from ..common import serializers
+from home_application.common.commonresponse import CommonResponse
+from .. import models
 
 
 class LoginRegister(ObtainJSONWebToken, CreateModelMixin, GenericViewSet):
@@ -17,8 +17,8 @@ class LoginRegister(ObtainJSONWebToken, CreateModelMixin, GenericViewSet):
     def login(self, req, *args, **kwargs):
         """
         登录
-        @api {POST} /userapi/v1/login/
-        @apiName userapi
+        @api {POST} /user_api/v1/login/
+        @apiName user_api
 
         @apiParam {String} username    用户名
         @apiParam {String} get_sex     性别
@@ -49,8 +49,8 @@ class LoginRegister(ObtainJSONWebToken, CreateModelMixin, GenericViewSet):
     def register(self, req, *args, **kwargs):
         """
         注册
-        @api {POST} /userapi/v1/register/
-        @apiName userapi
+        @api {POST} /user_api/v1/register/
+        @apiName user_api
 
         @apiParam {String} username    用户名
         @apiParam {String} get_sex     性别
@@ -95,8 +95,8 @@ class LoginRegister(ObtainJSONWebToken, CreateModelMixin, GenericViewSet):
     def logout(self, req):
         """
         注销
-        @api {POST} /userapi/v1/register/
-        @apiName userapi
+        @api {POST} /user_api/v1/register/
+        @apiName user_api
 
         @apiSuccess Example {json} Success-Response:
         HTTP/1.1 200 OK

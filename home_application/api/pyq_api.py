@@ -4,9 +4,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from commonapi import serializers
-from commonapi.commonresponse import CommonResponse
-from . import models
+from ..common import serializers
+from home_application.common.commonresponse import CommonResponse
+from .. import models
 
 
 class PyqBrowser(RetrieveModelMixin, ListModelMixin, GenericViewSet):
@@ -26,8 +26,8 @@ class PyqBrowser(RetrieveModelMixin, ListModelMixin, GenericViewSet):
     def get_pyq(self, req, *args, **kwargs):
         """
         获取 朋友圈 群查
-        @api {GET} /pyqapi/v1/anno_pyq/
-        @apiName pyqapi
+        @api {GET} /pyq_api/v1/anno_pyq/
+        @apiName pyq_api
 
         @apiParam {String} 2020-06-28   分类日期
         @apiParam {String} username     用户名
@@ -78,7 +78,7 @@ class PyqBrowser(RetrieveModelMixin, ListModelMixin, GenericViewSet):
                 }
 
         获取 朋友圈 单查
-        @api {GET} /pyqapi/v1/anno_pyq/(?P<pk>.*)/
+        @api {GET} /pyq_api/v1/anno_pyq/(?P<pk>.*)/
         {
             "result": true,
             "status": 200,
@@ -125,8 +125,8 @@ class PyqBrowser(RetrieveModelMixin, ListModelMixin, GenericViewSet):
     def get_private_pyq_zone(self, req, *args, **kwargs):
         """
         访问一个人的空间 群查
-        @api {GET} /pyqapi/v1/private_pyq_zone/(?P<user_name>.*)/
-        @apiName pyqapi
+        @api {GET} /pyq_api/v1/private_pyq_zone/(?P<user_name>.*)/
+        @apiName pyq_api
 
         @apiParam {String} 2020-06-28   分类日期
         @apiParam {String} username     用户名
@@ -187,11 +187,11 @@ class PyqOperator(RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateMo
     # 只有拥有有效的 token 的用户才能操作
     permission_classes = [IsAuthenticated]
 
-    def add_pyq(self, req, *args, **kwargs):
+    def add_pyq(self, req):
         """
         发表一条动态
-        @api {POST} /pyqapi/v1/pyq_operate/
-        @apiName pyqapi
+        @api {POST} /pyq_api/v1/pyq_operate/
+        @apiName pyq_api
 
         @apiParam {String} username     用户名
         @apiParam {String} user_img     用户头像
@@ -224,11 +224,11 @@ class PyqOperator(RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateMo
         response = self.serializer_class(instance=pyq_obj)
         return CommonResponse(response.data)
 
-    def del_restore_pyq(self, req, *args, **kwargs):
+    def del_restore_pyq(self, req, **kwargs):
         """
         删除或恢复朋友圈
-        @api {DELETE} /pyqapi/v1/pyq_operate/(?P<pk>.*)/
-        @apiName pyqapi
+        @api {DELETE} /pyq_api/v1/pyq_operate/(?P<pk>.*)/
+        @apiName pyq_api
 
         @apiSuccess Example {json} Success-Response:
         HTTP/1.1 200 OK
@@ -252,8 +252,8 @@ class PyqOperator(RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateMo
     def update_pyq(self, req, *args, **kwargs):
         """
         更新朋友圈
-        @api {PUT} /pyqapi/v1/comment_operate/(?P<pk>.*)/
-        @apiName pyqapi
+        @api {PUT} /pyq_api/v1/comment_operate/(?P<pk>.*)/
+        @apiName pyq_api
 
         @apiParam {String} username     用户名
         @apiParam {String} user_img     用户头像
@@ -282,11 +282,11 @@ class PyqOperator(RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateMo
         response = self.update(req, *args, **kwargs)
         return CommonResponse(response.data)
 
-    def update_wink_status(self, req, *args, **kwargs):
+    def update_wink_status(self, req, **kwargs):
         """
         点赞
-        @api {POST} /pyqapi/v1/pyq_operate/(?P<pk>.*)/
-        @apiName pyqapi
+        @api {POST} /pyq_api/v1/pyq_operate/(?P<pk>.*)/
+        @apiName pyq_api
 
         @apiSuccess Example {json} Success-Response:
         HTTP/1.1 200 OK
@@ -313,11 +313,11 @@ class PyqOperator(RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateMo
 
         return CommonResponse(message='%s成功' % ('取消点赞' if is_delete else '点赞'))
 
-    def add_comment(self, req, *args, **kwargs):
+    def add_comment(self, req, **kwargs):
         """
         评论某条动态
-        @api {POST} /pyqapi/v1/comment_operate/(?P<pk>.*)/
-        @apiName pyqapi
+        @api {POST} /pyq_api/v1/comment_operate/(?P<pk>.*)/
+        @apiName pyq_api
 
         @apiParam {String} username     用户名
         @apiParam {String} user_img     用户头像
@@ -351,11 +351,11 @@ class PyqOperator(RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateMo
         response = self.serializer_class(instance=comment_obj)
         return CommonResponse(response.data)
 
-    def del_comment(self, req, *args, **kwargs):
+    def del_comment(self, req, **kwargs):
         """
         删除评论
-        @api {DELETE} /pyqapi/v1/comment_operate/(?P<pyq_obj_id>.*)/(?P<comment_obj_id>.*)
-        @apiName pyqapi
+        @api {DELETE} /pyq_api/v1/comment_operate/(?P<pyq_obj_id>.*)/(?P<comment_obj_id>.*)
+        @apiName pyq_api
 
         @apiSuccess Example {json} Success-Response:
         HTTP/1.1 200 OK
