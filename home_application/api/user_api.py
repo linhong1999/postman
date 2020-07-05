@@ -16,7 +16,7 @@ class LoginRegister(ObtainJSONWebToken, CreateModelMixin, GenericViewSet):
 
     def login(self, req, *args, **kwargs):
         """
-        登录接口
+        登录
         @api {POST} /userapi/v1/login/
         @apiName userapi
 
@@ -48,7 +48,7 @@ class LoginRegister(ObtainJSONWebToken, CreateModelMixin, GenericViewSet):
 
     def register(self, req, *args, **kwargs):
         """
-        注册接口
+        注册
         @api {POST} /userapi/v1/register/
         @apiName userapi
 
@@ -94,7 +94,7 @@ class LoginRegister(ObtainJSONWebToken, CreateModelMixin, GenericViewSet):
 
     def logout(self, req):
         """
-        注册接口
+        注销
         @api {POST} /userapi/v1/register/
         @apiName userapi
 
@@ -112,7 +112,6 @@ class LoginRegister(ObtainJSONWebToken, CreateModelMixin, GenericViewSet):
 
 
 class LoginRegister2(CreateModelMixin, GenericAPIView):
-    # queryset = models.TestUser.objects.all()
     serializer_class = serializers.UserModelSerializers2
 
     def post(self, req, *args, **kwargs):

@@ -10,7 +10,6 @@ from . import models
 
 
 class PyqBrowser(RetrieveModelMixin, ListModelMixin, GenericViewSet):
-
     serializer_class = serializers.PyqModelSerializers
 
     def sort_by_date(self, query):
@@ -225,43 +224,30 @@ class PyqOperator(RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateMo
         response = self.serializer_class(instance=pyq_obj)
         return CommonResponse(response.data)
 
-    def add_comment(self, req, *args, **kwargs):
+    def del_restore_pyq(self, req, *args, **kwargs):
         """
-        评论某条动态
-        @api {POST} /pyqapi/v1/comment_operate/(?P<pk>.*)/
+        删除或恢复朋友圈
+        @api {DELETE} /pyqapi/v1/pyq_operate/(?P<pk>.*)/
         @apiName pyqapi
 
-        @apiParam {String} username     用户名
-        @apiParam {String} user_img     用户头像
-        @apiParam {int} id              评论id
-        @apiParam {int} pyq_obj_id      朋友圈id
-        @apiParam {String} comments     评论
-        @apiParam {String} create_time  创建日期
-        @apiParam {String} winks        点赞列表
         @apiSuccess Example {json} Success-Response:
         HTTP/1.1 200 OK
         {
             "result": true,
             "status": 200,
-            "message": "success",
-            "data": {
-                "username": "lh",
-                "user_img": "img/default.png",
-                "comment": "是啊，真的好热",
-                "create_time": "2020-07-04T12:09:35.669831Z",
-                "id": 16,
-                "pyq_obj_id": "14"
-            }
+            "message": "删除成功",
+            "data": null
         }
         """
-        self.serializer_class = serializers.CommentModelSerializer
-        comment_obj = models.Comment.objects.create(
-            pyq_obj_id=kwargs.get('pk'),
-            user=req.user,
-            comment=req.data['comment']
-        )
-        response = self.serializer_class(instance=comment_obj)
-        return CommonResponse(response.data)
+        pk = kwargs.get('pk')
+        method = req.method
+        is_delete = True if method == 'DELETE' else False
+        if req.user:
+            # 级联
+            models.Pyq.objects.filter(pk=pk).update(is_delete=is_delete)
+            models.Comment.objects.filter(pyq_obj_id=pk).update(is_delete=is_delete)
+
+        return CommonResponse(message='%s成功' % ('删除' if method == 'DELETE' else '恢复'))
 
     def update_pyq(self, req, *args, **kwargs):
         """
@@ -296,10 +282,10 @@ class PyqOperator(RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateMo
         response = self.update(req, *args, **kwargs)
         return CommonResponse(response.data)
 
-    def del_restore_pyq(self, req, *args, **kwargs):
+    def update_wink_status(self, req, *args, **kwargs):
         """
-        删除或恢复朋友圈
-        @api {DELETE} /pyqapi/v1/pyq_operate/(?P<pk>.*)/
+        点赞
+        @api {POST} /pyqapi/v1/pyq_operate/(?P<pk>.*)/
         @apiName pyqapi
 
         @apiSuccess Example {json} Success-Response:
@@ -307,19 +293,63 @@ class PyqOperator(RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateMo
         {
             "result": true,
             "status": 200,
-            "message": "删除成功",
+            "message": "点赞成功",
             "data": null
         }
         """
-        pk = kwargs.get('pk')
-        method = req.method
-        is_delete = True if method == 'DELETE' else False
-        if req.user:
-            # 级联
-            models.Pyq.objects.filter(pk=pk).update(is_delete=is_delete)
-            models.Comment.objects.filter(pyq_obj_id=pk).update(is_delete=is_delete)
+        user_id = req.user.id
+        pyq_obj_id = kwargs.get('pk')
+        # 这样空值 也为 True
+        obj = models.Wink.objects.filter(pyq_obj_id=pyq_obj_id, user_id=user_id).first()
+        if obj:
+            obj.is_delete = not obj.is_delete
+            is_delete = obj.is_delete
+            obj.save()
+        else:
+            is_delete = False
+            models.Wink(
+                user_id=user_id, pyq_obj_id=pyq_obj_id, is_delete=is_delete
+            ).save()
 
-        return CommonResponse(message='%s成功' % ('删除' if method == 'DELETE' else '恢复'))
+        return CommonResponse(message='%s成功' % ('取消点赞' if is_delete else '点赞'))
+
+    def add_comment(self, req, *args, **kwargs):
+        """
+        评论某条动态
+        @api {POST} /pyqapi/v1/comment_operate/(?P<pk>.*)/
+        @apiName pyqapi
+
+        @apiParam {String} username     用户名
+        @apiParam {String} user_img     用户头像
+        @apiParam {int} id              评论id
+        @apiParam {int} pyq_obj_id      朋友圈id
+        @apiParam {String} comments     评论
+        @apiParam {String} create_time  创建日期
+        @apiParam {String} winks        点赞列表
+        @apiSuccess Example {json} Success-Response:
+        HTTP/1.1 200 OK
+        {
+            "result": true,
+            "status": 200,
+            "message": "success",
+            "data": {
+                "username": "lh",
+                "user_img": "img/default.png",
+                "comment": "是啊，真的好热",
+                "create_time": "2020-07-04T12:09:35.669831Z",
+                "id": 16,
+                "pyq_obj_id": "14"
+            }
+        }
+        """
+        self.serializer_class = serializers.CommentModelSerializer
+        comment_obj = models.Comment.objects.create(
+            pyq_obj_id=kwargs.get('pyq_obj_id'),
+            user=req.user,
+            comment=req.data['comment']
+        )
+        response = self.serializer_class(instance=comment_obj)
+        return CommonResponse(response.data)
 
     def del_comment(self, req, *args, **kwargs):
         """
@@ -341,33 +371,5 @@ class PyqOperator(RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateMo
         models.Comment.objects.filter(pk=comment_obj_id).update(is_delete=True)
         return CommonResponse(message='删除成功')
 
-    def update_wink_status(self, req, *args, **kwargs):
-        """
-        点赞
-        @api {POST} /pyqapi/v1/pyq_operate/(?P<pk>.*)/
-        @apiName pyqapi
 
-        @apiSuccess Example {json} Success-Response:
-        HTTP/1.1 200 OK
-        {
-            "result": true,
-            "status": 200,
-            "message": "点赞成功",
-            "data": null
-        }
-        """
-        user_id = req.user.id
-        pyq_obj_id = req.data.get('pyq_obj_id')
-        # 这样空值 也为 True
-        obj = models.Wink.objects.filter(pyq_obj_id=pyq_obj_id, user_id=user_id).first()
-        if obj:
-            obj.is_delete = not obj.is_delete
-            is_delete = obj.is_delete
-            obj.save()
-        else:
-            is_delete = True
-            models.Wink(
-                user_id=user_id, pyq_obj_id=pyq_obj_id, is_delete=is_delete
-            ).save()
-        return CommonResponse(message='%s成功' % ('取消点赞' if is_delete else '点赞'))
 

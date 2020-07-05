@@ -20,8 +20,4 @@ urlpatterns = [
                 'post': 'add_comment', 'delete': 'del_comment'
             })
             ),
-    path('v1/test/', views.PyqOperator.as_view({'post': 'test'})),
-    re_path(r'v1/test/(?P<pyq_obj_id>.*)/$',
-            views.PyqBrowser.as_view({'post': 'test'})),
-
 ]

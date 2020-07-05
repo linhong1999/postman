@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-
-from rest_framework import serializers, exceptions
+from rest_framework import serializers
 from rest_framework_jwt.views import JSONWebTokenSerializer
+
 from userapi import models as user_api_model
 from pyqapi import models as pyq_api_model
 
 
 class UserModelSerializers(JSONWebTokenSerializer, serializers.ModelSerializer):
-
     class Meta:
         model = user_api_model.User
         fields = ('username', 'password', 'get_sex', 'sex', 'img')
@@ -26,7 +25,6 @@ class UserModelSerializers(JSONWebTokenSerializer, serializers.ModelSerializer):
 
 
 class UserModelSerializers2(serializers.ModelSerializer):
-
     class Meta:
         model = user_api_model.TestUser
         fields = ('username', 'password', 'sex')
