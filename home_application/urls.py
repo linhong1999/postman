@@ -6,7 +6,6 @@ from .api import pyq_api, user_api
 
 urlpatterns = [
     url(r'^pyq_api/v1/anno_pyq/$', pyq_api.PyqBrowser.as_view({'get': 'get_pyq'})),
-    url(r'^pyq_api/v1/$', pyq_api.PyqBrowser.as_view({'get': 'get_pyq'})),
     url(r'^pyq_api/v1/private_pyq_zone/(?P<user_name>.*)/$',
         pyq_api.PyqBrowser.as_view({'get': 'get_private_pyq_zone'})),
     url(r'^pyq_api/v1/pyq_operate/$', pyq_api.PyqOperator.as_view({'post': 'add_pyq'})),
