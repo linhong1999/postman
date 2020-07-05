@@ -37,9 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'userapi',
-    'commonapi',
-    'pyqapi',
+    'home_application'
 ]
 
 MIDDLEWARE = [
@@ -85,6 +83,9 @@ DATABASES = {
         'PASSWORD': '111111',
         'HOST': '127.0.0.1',
         'PORT': '3306',
+        'TEST': {
+          'NAME': 'test_postman',
+      }
     },
 }
 
@@ -129,7 +130,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-AUTH_USER_MODEL = 'userapi.User'
+AUTH_USER_MODEL = 'home_application.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
@@ -142,10 +143,8 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.FormParser',       # url
         'rest_framework.parsers.MultiPartParser',  # 这个才是form
     ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [  # 认证类配置
-        'commonapi.authentications.MyAuthentication',
-    ],
-    'EXCEPTION_HANDLER': 'commonapi.exceptions.exception_handler',
+
+    'EXCEPTION_HANDLER': 'home_application.common.exceptions.exception_handler',
 
 }
 

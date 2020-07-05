@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 
 import os, django
-
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'postman.settings')
 django.setup()
 
-from PyqAPI import models
+#
+# os.environ.setdefault('token','ssssssssssss')
+# print(os.environ.get('token'))
 
-obj = models.Wink.objects.filter(pyq_obj_id=1, user_id=3).first()
-obj.is_delete = not obj.is_delete
-obj.save()
+#
+
+# obj = models.Wink.objects.filter(pyq_obj_id=1, user_id=3).first()
+# obj.is_delete = not obj.is_delete
+# obj.save()
 # models.Wink(
 #     user_id=2,pyq_obj_id=1
 # ).save()

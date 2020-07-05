@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
 from rest_framework_jwt.views import JSONWebTokenSerializer
-
-from userapi import models as user_api_model
-from pyqapi import models as pyq_api_model
+from .. import models
 
 
 class UserModelSerializers(JSONWebTokenSerializer, serializers.ModelSerializer):
     class Meta:
-        model = user_api_model.User
+        model = models.User
         fields = ('username', 'password', 'get_sex', 'sex', 'img')
         extra_kwargs = {
             'sex': {
@@ -26,7 +24,7 @@ class UserModelSerializers(JSONWebTokenSerializer, serializers.ModelSerializer):
 
 class UserModelSerializers2(serializers.ModelSerializer):
     class Meta:
-        model = user_api_model.TestUser
+        model = models.TestUser
         fields = ('username', 'password', 'sex')
         extra_kwargs = {
             'sex': {
@@ -37,13 +35,13 @@ class UserModelSerializers2(serializers.ModelSerializer):
 
 class CommentModelSerializer(serializers.ModelSerializer):
     class Meta:
-        model = pyq_api_model.Comment
+        model = models.Comment
         fields = ('username', 'user_img', 'comment', 'create_time', 'id', 'pyq_obj_id')
 
 
 class WinkModelSerializer(serializers.ModelSerializer):
     class Meta:
-        model = pyq_api_model.Wink
+        model = models.Wink
         fields = ('username',)
 
 
@@ -52,7 +50,7 @@ class PyqModelSerializers(serializers.ModelSerializer):
     winks = serializers.SerializerMethodField()
 
     class Meta:
-        model = pyq_api_model.Pyq
+        model = models.Pyq
         fields = ('username', 'user_img', 'id', 'content', 'comments', 'create_time', 'winks')
         extra_kwargs = {
             'content': {
